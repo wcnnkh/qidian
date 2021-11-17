@@ -38,4 +38,7 @@ public class SearchRequest implements Serializable {
 	private Integer sign;
 	@Schema(description = "更新时间")
 	private Integer update;
+	@Schema(description = "是否强制转换为文本", example = "false", defaultValue = "false")
+	private boolean forceToText;
+
 }

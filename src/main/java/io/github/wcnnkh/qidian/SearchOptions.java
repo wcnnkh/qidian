@@ -18,19 +18,19 @@ import lombok.NoArgsConstructor;
 public class SearchOptions implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Schema(description = "站点")
-	private List<Pair<Integer, String>> siteidOptions;
+	private List<Pair<String, String>> siteidOptions;
 	@Schema(description = "分类")
-	private List<Pair<Integer, String>> chanIdOptions;
+	private List<Pair<String, String>> chanIdOptions;
 	@Schema(description = "状态")
-	private List<Pair<Integer, String>> actionOptions;
+	private List<Pair<String, String>> actionOptions;
 	@Schema(description = "属性")
-	private List<Pair<Integer, String>> vipOptions;
+	private List<Pair<String, String>> vipOptions;
 	@Schema(description = "字数")
-	private List<Pair<Integer, String>> sizeOptions;
+	private List<Pair<String, String>> sizeOptions;
 	@Schema(description = "品质")
-	private List<Pair<Integer, String>> signOptions;
+	private List<Pair<String, String>> signOptions;
 	@Schema(description = "更新时间")
-	private List<Pair<Integer, String>> updateOptions;
+	private List<Pair<String, String>> updateOptions;
 	@Schema(description = "排序")
-	private List<Pair<Integer, String>> sortOptions;
+	private List<Pair<String, String>> sortOptions;
 }
