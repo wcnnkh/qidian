@@ -1,21 +1,22 @@
 package io.github.wcnnkh.qidian;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
-import java.io.Serializable;
-
 import javax.validation.constraints.NotEmpty;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchRequest implements Serializable {
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class SearchRequest extends BaseRequest {
 	private static final long serialVersionUID = 1L;
 	@Schema(description = "关键字")
 	@NotEmpty
@@ -38,7 +39,4 @@ public class SearchRequest implements Serializable {
 	private Integer sign;
 	@Schema(description = "更新时间")
 	private Integer update;
-	@Schema(description = "是否强制转换为文本", example = "false", defaultValue = "false")
-	private boolean forceToText;
-
 }

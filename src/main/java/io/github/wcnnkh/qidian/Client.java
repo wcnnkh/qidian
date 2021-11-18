@@ -1,13 +1,9 @@
 package io.github.wcnnkh.qidian;
 
-import io.basc.framework.logger.Logger;
-import io.basc.framework.logger.LoggerFactory;
-import io.basc.framework.util.Pair;
-import io.basc.framework.util.page.SharedPage;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.jsoup.Connection;
@@ -15,6 +11,12 @@ import org.jsoup.helper.HttpConnection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import io.basc.framework.logger.Logger;
+import io.basc.framework.logger.LoggerFactory;
+import io.basc.framework.mapper.MapperUtils;
+import io.basc.framework.util.Pair;
+import io.basc.framework.util.page.SharedPage;
 
 public class Client {
 	private static Logger logger = LoggerFactory.getLogger(Client.class);
@@ -30,8 +32,8 @@ public class Client {
 	}
 
 	public SearchResponse search(SearchRequest request) throws IOException {
-		Connection connection = HttpConnection.connect("https://www.qidian.com/search");
-		connection = connection.data("kw", request.getKw());
+		Map<String, String> params = MapperUtils.getFields(SearchRequest.class).entity().getValueMap(request).entrySet().stream().collect(Collectors.toMap((e) -> e.getKey(), (e) -> String.valueOf(e.getValue())));
+		Connection connection = HttpConnection.connect("https://www.qidian.com/search").data(params);
 		Document document = connection.get();
 		if (logger.isDebugEnabled()) {
 			logger.debug("Search[{}] response:", request, document.html());
@@ -93,10 +95,32 @@ public class Client {
 		return SearchResponse.builder().results(page).options(searchOptions).build();
 	}
 
-	private String getContent(SearchRequest request, Element element) {
+	private String getContent(BaseRequest request, Element element) {
 		if (element == null) {
 			return null;
 		}
 		return request.isForceToText() ? element.text() : element.html();
+	}
+
+	public BookDetails getBookDetails(BookDetailsRequest request) throws IOException {
+		Connection connection = HttpConnection.connect("https://book.qidian.com/info/" + request.getBookId());
+		Document document = connection.get();
+		if (logger.isDebugEnabled()) {
+			logger.debug("Get details [{}] response:", request, document.html());
+		}
+		List<Chapter> chapters = document.select("#j-catalogWrap div.volume ul.cf>li").stream().map((element) -> {
+			return Chapter.builder().id(element.select("a").first().absUrl("href"))
+					.name(getContent(request, element.select("a").first())).build();
+		}).collect(Collectors.toList());
+		
+		BookDetails details = new BookDetails();
+		details.setChapters(chapters);
+		return details;
+	}
+	
+	public ChapterDetails getChapterDetails(ChapterDetailsRequest request) throws IOException {
+		Connection connection = HttpConnection.connect(request.getChapterId());
+		Document document = connection.get();
+		return ChapterDetails.builder().content(getContent(request, document.select("div.read-content").first())).build();
 	}
 }
