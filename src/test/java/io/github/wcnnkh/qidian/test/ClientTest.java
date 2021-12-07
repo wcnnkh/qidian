@@ -22,7 +22,7 @@ public class ClientTest {
 	public void test() throws IOException{
 		SearchResponse response = client.search(SearchRequest.builder().kw("斗破").action(1).vip(1).build());
 		System.out.println(response);
-		Book book = response.getResults().getRows().get(0);
+		Book book = response.getResults().getList().get(0);
 		BookDetails bookDetails = client.getBookDetails(BookDetailsRequest.builder().bookId(book.getId()).build());
 		System.out.println(bookDetails);
 		Chapter chapter = bookDetails.getChapters().get(bookDetails.getChapters().size() - 1);

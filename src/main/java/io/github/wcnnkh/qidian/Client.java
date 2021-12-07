@@ -16,7 +16,7 @@ import io.basc.framework.logger.Logger;
 import io.basc.framework.logger.LoggerFactory;
 import io.basc.framework.mapper.MapperUtils;
 import io.basc.framework.util.Pair;
-import io.basc.framework.util.page.SharedPage;
+import io.basc.framework.util.page.SharedPagination;
 
 public class Client {
 	private static Logger logger = LoggerFactory.getLogger(Client.class);
@@ -48,8 +48,8 @@ public class Client {
 			book.setIntro(getContent(request, info.select("p.intro").first()));
 			return book;
 		}).collect(Collectors.toList());
-		SharedPage<Book> page = new SharedPage<Book>(books.size());
-		page.setRows(books);
+		SharedPagination<Book> page = new SharedPagination<Book>();
+		page.setList(books);
 		page.setCount(books.size());
 		if (request.getPage() != null) {
 			page.setPageNumber(request.getPage());
