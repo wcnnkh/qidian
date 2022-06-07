@@ -14,7 +14,7 @@ import org.jsoup.select.Elements;
 
 import io.basc.framework.logger.Logger;
 import io.basc.framework.logger.LoggerFactory;
-import io.basc.framework.mapper.MapperUtils;
+import io.basc.framework.mapper.Fields;
 import io.basc.framework.util.Pair;
 import io.basc.framework.util.page.SharedPagination;
 
@@ -32,7 +32,7 @@ public class Client {
 	}
 
 	public SearchResponse search(SearchRequest request) throws IOException {
-		Map<String, String> params = MapperUtils.getFields(SearchRequest.class).entity().getValueMap(request).entrySet().stream().collect(Collectors.toMap((e) -> e.getKey(), (e) -> String.valueOf(e.getValue())));
+		Map<String, String> params = Fields.getFields(SearchRequest.class).entity().getValueMap(request).entrySet().stream().collect(Collectors.toMap((e) -> e.getKey(), (e) -> String.valueOf(e.getValue())));
 		Connection connection = HttpConnection.connect("https://www.qidian.com/search").data(params);
 		Document document = connection.get();
 		if (logger.isDebugEnabled()) {
